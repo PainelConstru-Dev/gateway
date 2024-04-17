@@ -97,6 +97,18 @@ def list_payments(customer_id):
     for payment in response.json()['data']:
         print(f"Descrição: {payment['description']}\t Valor: R$ {payment['value']}\t Tipo: {payment['billingType']}\t Data de vencimento: {payment['dueDate']} \t ID: {payment['id']}")
 
+#extrato da conta
+def transactions():
+    url = os.getenv("ASAAS_URL") + "/financialTransactions"
+    headers = {
+        "accept": "application/json",
+        "access_token": os.getenv("ASAAS_KEY"),
+    }
+
+    response = requests.get(url, headers=headers)
+    print(response.text)
+    for transaction in response.json()['data']:
+        print(f"Descrição: {transaction['description']}\t Valor: R$ {transaction['value']}\t Tipo: {transaction['type']}")
 
 if __name__ == "__main__":
     #menu
@@ -106,6 +118,7 @@ if __name__ == "__main__":
         print("2 - Listar clientes")
         print("3 - Criar chave PIX")
         print("4 - Listar pagamentos do cliente")
+        print("5 - Extrato")
 
         option = input("Digite a opção desejada (ou Quit): ")
         
@@ -118,7 +131,9 @@ if __name__ == "__main__":
         elif option == "4":
             customer_id = input("Digite o ID do cliente: ")
             list_payments(customer_id)
-        elif option.lower() == "quit":
+        elif option == "5": #extrato
+            transactions()
+        elif option.lower() == "q":
             break
         else:
             print("Opção inválida")
